@@ -57,8 +57,9 @@ def interpolate_color(start_color, end_color, factor):
     # Convert to hex color string
     return '#{:02x}{:02x}{:02x}'.format(*interpolated_rgb)
 
-def rot_square(times:int=1):
+def rot_shape(times:int=1, sides:int=4, side_lenght:int=150):
     inc_base = (360/times)
+    shape_angle = 360/sides
     for i in range(times):
         # Calculate color interpolation factor
         color_factor = i / (times - 1)  # Ensures first is red, last is violet
@@ -73,12 +74,10 @@ def rot_square(times:int=1):
         
         inc_angle = 1*inc_base
         tt.left(inc_angle)
-        for j in range(4):
-            tt.forward(120)
-            tt.right(90)
+        for j in range(sides):
+            tt.forward(side_lenght)
+            tt.right(shape_angle)
 
-            print("j: ", j, "inc angle: ", inc_angle)
-
-rot_square(360)
+rot_shape(360, 7, 100)
 
 turtle.done()
