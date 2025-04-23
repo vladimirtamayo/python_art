@@ -1,14 +1,19 @@
 
 import turtle
 
-tt = turtle.Turtle()
-turtle.bgcolor('black')
 
-tt.shape('turtle')
+# Predefined colors in hex
+colors = {
+    'red': '#FF0000',
+    'blue': '#0000FF',
+    'green': '#008000',
+    'yellow': '#FFFF00',
+    'black': '#000000',
+    'white': '#FFFFFF',
+    'orange': '#FFA500',
+    'purple': '#800080'
+}
 
-tt.color('green')
-
-tt.speed('fastest')
 
 def interpolate_color(start_color, end_color, factor):
     """
@@ -30,15 +35,9 @@ def interpolate_color(start_color, end_color, factor):
         rgb = colorsys.hsv_to_rgb(hsv[0], hsv[1], hsv[2])
         return tuple(int(x * 255) for x in rgb)
     
-    # Predefined colors in hex
-    colors = {
-        'red': '#FF0000',
-        'violet': '#8A2BE2'
-    }
-    
     # Convert hex to RGB
-    start_rgb = hex_to_rgb(colors['red'])
-    end_rgb = hex_to_rgb(colors['violet'])
+    start_rgb = hex_to_rgb(colors[start_color])
+    end_rgb = hex_to_rgb(colors[end_color])
     
     # Convert RGB to HSV
     start_hsv = rgb_to_hsv(start_rgb)
@@ -57,7 +56,7 @@ def interpolate_color(start_color, end_color, factor):
     # Convert to hex color string
     return '#{:02x}{:02x}{:02x}'.format(*interpolated_rgb)
 
-def rot_shape(times:int=1, sides:int=4, side_lenght:int=150):
+def rot_shape(times:int=1, sides:int=4, side_lenght:int=150, start_color:str='red', end_color:str='purple'):
     inc_base = (360/times)
     shape_angle = 360/sides
     for i in range(times):
@@ -65,7 +64,7 @@ def rot_shape(times:int=1, sides:int=4, side_lenght:int=150):
         color_factor = i / (times - 1)  # Ensures first is red, last is violet
         
         # Get interpolated color
-        color = interpolate_color('red', 'violet', color_factor)
+        color = interpolate_color(start_color, end_color, color_factor)
         
         print(f"i: {i}, Color: {color}")
         
@@ -78,6 +77,29 @@ def rot_shape(times:int=1, sides:int=4, side_lenght:int=150):
             tt.forward(side_lenght)
             tt.right(shape_angle)
 
-rot_shape(360, 7, 100)
+
+color_list = ','.join([color for color in colors.keys()])
+
+times = int(input("How many times? ") or 7)
+sides = int(input("How many sides? ") or 7)
+lenght = int(input("How long each side? ") or 100)
+start_color = input("Start color: "+color_list+' ') or 'red'
+while start_color not in color_list:
+    start_color = input("Start color: "+color_list+' ')
+
+end_color = input("End color: "+color_list.replace(start_color, '')+' ') or 'purple'
+while end_color not in color_list:
+    end_color = input("End color: "+color_list.replace(start_color, '')+' ')
+
+tt = turtle.Turtle()
+turtle.bgcolor('black')
+
+tt.shape('turtle')
+
+tt.color('green')
+
+tt.speed('fastest')
+
+rot_shape(times, sides, lenght, start_color, end_color)
 
 turtle.done()
